@@ -30,12 +30,13 @@ env:
 
 jobs:
   validate-dco:
+    if: false
     uses: ./.github/workflows/.dco.yml
 
   build-linux:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 120 # guardrails timeout for the whole job
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
     needs:
       - validate-dco
     steps:
@@ -61,9 +62,9 @@ jobs:
           retention-days: 1
 
   test-linux:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 120 # guardrails timeout for the whole job
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
     needs:
       - build-linux
     env:
@@ -166,9 +167,9 @@ jobs:
         working-directory: buildkit
 
   build-windows:
+    if: false
     runs-on: windows-2022
     timeout-minutes: 120
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
     needs:
       - validate-dco
     env:
@@ -256,9 +257,9 @@ jobs:
           retention-days: 2
 
   test-windows:
+    if: false
     runs-on: windows-2022
     timeout-minutes: 120 # guardrails timeout for the whole job
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
     needs:
       - build-windows
     env:

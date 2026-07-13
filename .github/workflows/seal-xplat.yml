@@ -1,0 +1,32 @@
+name: seal-xplat
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+      - name: Stage module files
+        shell: bash
+        run: |
+          cp vendor.mod go.mod
+          cp vendor.sum go.sum
+      - name: Run tests
+        shell: bash
+        run: |
+          go test -mod=vendor -count=1 -short -timeout 10m \
+            ./client/... ./errdefs/... ./opts/... ./pkg/archive/... \
+            ./pkg/homedir/... ./pkg/idtools/... ./pkg/jsonmessage/... \
+            ./pkg/namesgenerator/... ./pkg/stdcopy/... ./pkg/stringid/... \
+            ./pkg/tailfile/... ./api/types/...

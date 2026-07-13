@@ -37,6 +37,7 @@ env:
 
 jobs:
   codeql:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:

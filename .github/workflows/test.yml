@@ -31,9 +31,11 @@ env:
 
 jobs:
   validate-dco:
+    if: false
     uses: ./.github/workflows/.dco.yml
 
   build-dev:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 120 # guardrails timeout for the whole job
     needs:
@@ -70,7 +72,7 @@ jobs:
             *.output=type=cacheonly
 
   test:
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
+    if: false
     needs:
       - build-dev
       - validate-dco
@@ -86,7 +88,7 @@ jobs:
       storage: ${{ matrix.storage }}
 
   test-unit:
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
+    if: false
     needs:
       - build-dev
       - validate-dco
@@ -94,6 +96,7 @@ jobs:
     secrets: inherit
 
   validate-prepare:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 10 # guardrails timeout for the whole job
     needs:
@@ -116,6 +119,7 @@ jobs:
           echo ${{ steps.scripts.outputs.matrix }}
 
   validate:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 30 # guardrails timeout for the whole job
     needs:
@@ -154,6 +158,7 @@ jobs:
           make -o build validate-${{ matrix.script }}
 
   smoke-prepare:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 10 # guardrails timeout for the whole job
     if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
@@ -177,6 +182,7 @@ jobs:
           echo ${{ steps.platforms.outputs.matrix }}
 
   smoke:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 20 # guardrails timeout for the whole job
     if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}

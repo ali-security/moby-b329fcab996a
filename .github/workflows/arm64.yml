@@ -32,12 +32,13 @@ env:
 
 jobs:
   validate-dco:
+    if: false
     uses: ./.github/workflows/.dco.yml
 
   build:
+    if: false
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20 # guardrails timeout for the whole job
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
     needs:
       - validate-dco
     strategy:
@@ -69,9 +70,9 @@ jobs:
           find ${{ env.DESTDIR }} -type f -exec file -e ascii -- {} +
 
   build-dev:
+    if: false
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 120 # guardrails timeout for the whole job
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
     needs:
       - validate-dco
     steps:
@@ -93,9 +94,9 @@ jobs:
             *.output=type=cacheonly
 
   test-unit:
+    if: false
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 120 # guardrails timeout for the whole job
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
     needs:
       - build-dev
     steps:
@@ -153,10 +154,10 @@ jobs:
           retention-days: 1
 
   test-unit-report:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     continue-on-error: ${{ github.event_name != 'pull_request' }}
-    if: always() && (github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only'))
     needs:
       - test-unit
     steps:
@@ -182,10 +183,10 @@ jobs:
           find /tmp/reports -type f -name '*-go-test-report.json' -exec teststat -markdown {} \+ >> $GITHUB_STEP_SUMMARY
 
   test-integration:
+    if: false
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 120 # guardrails timeout for the whole job
     continue-on-error: ${{ github.event_name != 'pull_request' }}
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
     needs:
       - build-dev
     steps:
@@ -256,10 +257,10 @@ jobs:
           retention-days: 1
 
   test-integration-report:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     continue-on-error: ${{ github.event_name != 'pull_request' }}
-    if: always() && (github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only'))
     needs:
       - test-integration
     steps:

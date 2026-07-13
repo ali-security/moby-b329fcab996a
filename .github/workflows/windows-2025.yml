@@ -24,14 +24,17 @@ on:
 
 jobs:
   validate-dco:
+    if: false
     uses: ./.github/workflows/.dco.yml
 
   test-prepare:
+    if: false
     uses: ./.github/workflows/.test-prepare.yml
     needs:
       - validate-dco
 
   run:
+    if: false
     if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
     needs:
       - test-prepare

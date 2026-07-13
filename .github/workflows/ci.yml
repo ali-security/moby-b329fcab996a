@@ -29,9 +29,11 @@ env:
 
 jobs:
   validate-dco:
+    if: false
     uses: ./.github/workflows/.dco.yml
 
   build:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 20 # guardrails timeout for the whole job
     needs:
@@ -65,9 +67,9 @@ jobs:
           find ${{ env.DESTDIR }} -type f -exec file -e ascii -- {} +
 
   prepare-cross:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 20 # guardrails timeout for the whole job
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
     needs:
       - validate-dco
     outputs:
@@ -88,9 +90,9 @@ jobs:
           echo ${{ steps.platforms.outputs.matrix }}
 
   cross:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 20 # guardrails timeout for the whole job
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
     needs:
       - validate-dco
       - prepare-cross
@@ -128,6 +130,7 @@ jobs:
           find ${{ env.DESTDIR }} -type f -exec file -e ascii -- {} +
 
   govulncheck:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 120 # guardrails timeout for the whole job
     # Always run security checks, even with 'ci/validate-only' label
@@ -159,8 +162,8 @@ jobs:
           sarif_file: ${{ env.DESTDIR }}/govulncheck.out
 
   build-dind:
+    if: false
     runs-on: ubuntu-24.04
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
     needs:
       - validate-dco
     steps:

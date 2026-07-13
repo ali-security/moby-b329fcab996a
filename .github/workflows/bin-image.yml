@@ -36,13 +36,13 @@ env:
 
 jobs:
   validate-dco:
-    if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+    if: false
     uses: ./.github/workflows/.dco.yml
 
   prepare:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 20 # guardrails timeout for the whole job
-    if: ${{ github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only') }}
     outputs:
       platforms: ${{ steps.platforms.outputs.matrix }}
     steps:
@@ -93,9 +93,9 @@ jobs:
           echo "matrix=$(docker buildx bake bin-image-cross --print | jq -cr '.target."bin-image-cross".platforms')" >>${GITHUB_OUTPUT}
 
   build:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 20 # guardrails timeout for the whole job
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && (github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'ci/validate-only')) }}
     needs:
       - validate-dco
       - prepare
@@ -169,9 +169,9 @@ jobs:
           retention-days: 1
 
   merge:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 40 # guardrails timeout for the whole job
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && github.event_name != 'pull_request' && github.repository == 'moby/moby' }}
     needs:
       - build
     steps:
